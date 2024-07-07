@@ -3,7 +3,7 @@ import os
 from scipy.special import erfc
 import math
 
-# Função para realizar o teste de frequência
+# Teste de frequência
 def frequency_test(buf, size):
     alpha = 0.01
     num_0s = 0
@@ -28,17 +28,14 @@ def frequency_test(buf, size):
     
     return p_value, gamma
 
-# Configurando o argparse para aceitar argumentos da linha de comando
 parser = argparse.ArgumentParser(description='Perform frequency test on a binary file.')
 parser.add_argument('-f', '--file', type=str, required=True, help='The path to the binary file')
 args = parser.parse_args()
 
-# Verificar se o arquivo existe
 if not os.path.exists(args.file):
     print(f"Erro: Arquivo '{args.file}' não encontrado.")
     exit(1)
 
-# Carregar o arquivo binário
 with open(args.file, 'rb') as binary_file:
     binary_data = binary_file.read()
     file_size = len(binary_data)
@@ -63,8 +60,9 @@ for i in range(100):
 pass_rate = sum(1 for p_value in p_values if p_value >= 0.01) / 100
 average_p_value = sum(p_values) / 100
 
+# Exibir resultados
 print(f"Pass rate: {pass_rate}")
-print(f"Average p-value: {average_p_value}")
+print(f"Average p-value: {average_p_value:.6f}")
 
 # Determinar o resultado do teste
 if pass_rate >= 0.96:
