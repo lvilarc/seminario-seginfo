@@ -16,7 +16,7 @@ with open(args.key, 'rb') as key_file:
     key = key_file.read()
 
 # Converter para representação hexadecimal
-hex_key = "0x" + key.hex()
+hex_key = "0x" + key.hex().upper()
 
 # Imprimir a chave em formato hexadecimal
 print("Chave AES em formato hexadecimal:", hex_key)

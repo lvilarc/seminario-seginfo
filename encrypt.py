@@ -1,13 +1,18 @@
 import argparse
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import padding
 import os
+import time
 
-# Função para criptografar dados usando AES-128 no modo ECB
 def encrypt_aes_ecb(key, data):
     cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=default_backend())
     encryptor = cipher.encryptor()
-    padded_data = data + b'\0' * (16 - len(data) % 16)  # Padding para garantir múltiplos de 16 bytes
+
+    # Aplicando padding PKCS7
+    padder = padding.PKCS7(algorithms.AES.block_size).padder()
+    padded_data = padder.update(data) + padder.finalize()
+
     encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
     return encrypted_data
 
@@ -33,8 +38,12 @@ file_path = args.file
 with open(file_path, 'rb') as file:
     original_data = file.read()
 
+start_time = time.time()
 # Criptografar o arquivo usando AES-128 no modo ECB
 encrypted_data = encrypt_aes_ecb(key, original_data)
+end_time = time.time()
+execution_time = end_time - start_time
+print(f"Tempo de execução: {execution_time} segundos")
 
 # Salvar o texto cifrado em um novo arquivo
 encrypted_file_path = "e_" + file_path

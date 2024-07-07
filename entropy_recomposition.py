@@ -1,10 +1,12 @@
 import os
 import argparse
+import time
 
 def reconstruct_data(modified_file_path, m):
     with open(modified_file_path, 'rb') as mf:
         modified_data = mf.read()
 
+    start_time = time.time()
     shares = []
     data_length = len(modified_data) // (m + 1)
     
@@ -22,6 +24,13 @@ def reconstruct_data(modified_file_path, m):
             subbyte ^= share[j]
         reconstructed_data.append(subbyte)
 
+    # Remover o padding
+    if len(reconstructed_data) % 16 != 0:
+        reconstructed_data = reconstructed_data[:-reconstructed_data[-1]]
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Tempo de execução: {execution_time} segundos")
     return reconstructed_data
 
 def main():
