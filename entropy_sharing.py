@@ -1,5 +1,6 @@
 import os
 import argparse
+import time
 
 def generate_shares(encrypted_file_path, benign_file_path, m):
     # Ler os arquivos
@@ -11,6 +12,7 @@ def generate_shares(encrypted_file_path, benign_file_path, m):
     if len(benign_data) < len(encrypted_data) * m:
         raise ValueError("O arquivo benigno é muito pequeno para o valor de m especificado.")
 
+    start_time = time.time()
     shares = []
 
     # Gerar shares
@@ -26,6 +28,9 @@ def generate_shares(encrypted_file_path, benign_file_path, m):
         
         shares.append((share, ai))
 
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Tempo de execução: {execution_time} segundos")
     return shares
 
 def save_modified_file(shares, output_file_path):
